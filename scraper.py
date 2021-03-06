@@ -12,6 +12,7 @@ chromedriver_loc = '/home/jpbogoni/Python/chromedriver'
 driver = webdriver.Chrome(chromedriver_loc, chrome_options=chrome_options)
 
 def price_check():
+    #Implemntar parametros URL; Price
     URL = 'https://www.amazon.com.br/gp/product/B07T39FC9P/ref=ewc_pr_img_2?smid=A1ZZFT5FULY4LN&psc=1'
 
     get = driver.get(URL)
@@ -28,8 +29,4 @@ def price_check():
     if (converted_price < 1200):
         send_email()
 
-    #print(title.strip())
-    #print(converted_price)
-
 def send_email():
-    
