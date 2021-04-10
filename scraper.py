@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import selenium
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import smtplib
 
 chrome_options = Options()
 chrome_options.add_argument('--no-sandbox')
@@ -10,6 +11,10 @@ chrome_options.add_argument('--headless')
 
 chromedriver_loc = '/home/jpbogoni/Python/chromedriver'
 driver = webdriver.Chrome(chromedriver_loc, chrome_options=chrome_options)
+
+email_login = input("e-mail login")
+email_password = input("e-mail password")
+email_to = input("e-mail to")
 
 class Product:
     def __init__(self, url, price_target):
@@ -44,10 +49,25 @@ def price_check(Product):
     converted_price = float(price[2:len(price)-3])
     
     if (converted_price < Product.price_target):
-        print ('Produto ' + title.strip() + ' Preço: ' + price)
+        send_email(title, price, URL)
 
-#implementar e-mail
-#def send_email():
+def send_email(product, price, url):
+    server = smtplib.SMTP('smtp.gmail.com',587)
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
+
+    server.login(email_login,email_password)
+
+    subject = "Price check for " + product
+    body = product + ' is available for ' + price + '  URL: ' + url
+
+    msg = (f"Subject: {subject}  {body}").encode('utf-8')
+    #print (msg)
+    server.sendmail(email_login,email_to,msg)
+
+    #print (msg)
+
 
 check = product_list()
 
