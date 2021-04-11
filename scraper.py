@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import selenium
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import smtplib
 
 chrome_options = Options()
@@ -59,14 +61,17 @@ def send_email(product, price, url):
 
     server.login(email_login,email_password)
 
-    subject = "Price check for " + product
-    body = product + ' is available for ' + price + '  URL: ' + url
+    msg = MIMEMultipart()
+    
+    message = product.strip() + ' is available for ' + price + '  URL: ' + url
 
-    msg = (f"Subject: {subject}  {body}").encode('utf-8')
-    #print (msg)
-    server.sendmail(email_login,email_to,msg)
+    msg['From'] = email_login
+    msg['To'] = email_to
+    msg['Subject'] = product.strip() + " - Price Check" 
 
-    #print (msg)
+    msg.attach(MIMEText(message, 'plain'))
+    
+    server.sendmail(email_login,email_to,msg.as_string())
 
 
 check = product_list()
